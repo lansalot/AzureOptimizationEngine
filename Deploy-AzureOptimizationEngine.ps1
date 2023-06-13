@@ -15,7 +15,10 @@ param (
     [switch] $IgnoreNamingAvailabilityErrors,
 
     [Parameter(Mandatory = $false)]
-    [string] $SilentDeploymentSettingsPath
+    [string] $SilentDeploymentSettingsPath,
+
+    [Parameter(Mandatory = $false)]
+    [HashTable] $Tags
 )
 
 function ConvertTo-Hashtable {
@@ -186,6 +189,19 @@ if ($ctx.Subscription.Id -ne $subscriptionId) {
 }
 
 #endregion
+
+# Ensure required providers are registered
+$RegisteredProviders = Get-AzResourceProvider
+$Requiredproviders = @(
+    "Microsoft.Storage"
+)
+ForEach ($Provider in $Requiredproviders) {
+    if ($registeredproviders.ProviderNameSpace -NotContains $Provider) {
+        Write-Warning "Required provider $($Provider) is missing in subscription - registering"
+        Register-AzResourceProvider -ProviderNamespace $Provider | Out-Null
+    }
+}
+
 
 #region Resource naming options
 $workspaceReuse = $null
@@ -517,7 +533,7 @@ if ("Y", "y" -contains $continueInput) {
                 -logAnalyticsWorkspaceName $laWorkspaceName -logAnalyticsWorkspaceRG $laWorkspaceResourceGroup `
                 -storageAccountName $storageAccountName -automationAccountName $automationAccountName `
                 -sqlServerName $sqlServerName -sqlDatabaseName $sqlDatabaseName -cloudEnvironment $AzureEnvironment `
-                -sqlAdminLogin $sqlAdmin -sqlAdminPassword $sqlPass
+                -sqlAdminLogin $sqlAdmin -sqlAdminPassword $sqlPass -Tag $Tags
         }
         else {
             $deployment = New-AzDeployment -TemplateUri $TemplateUri -Location $targetLocation -rgName $resourceGroupName -Name $deploymentName `
@@ -525,7 +541,7 @@ if ("Y", "y" -contains $continueInput) {
                 -logAnalyticsWorkspaceName $laWorkspaceName -logAnalyticsWorkspaceRG $laWorkspaceResourceGroup `
                 -storageAccountName $storageAccountName -automationAccountName $automationAccountName `
                 -sqlServerName $sqlServerName -sqlDatabaseName $sqlDatabaseName -cloudEnvironment $AzureEnvironment `
-                -sqlAdminLogin $sqlAdmin -sqlAdminPassword $sqlPass -artifactsLocationSasToken (ConvertTo-SecureString $ArtifactsSasToken -AsPlainText -Force)        
+                -sqlAdminLogin $sqlAdmin -sqlAdminPassword $sqlPass -artifactsLocationSasToken (ConvertTo-SecureString $ArtifactsSasToken -AsPlainText -Force) -Tag $Tags
         }
         $spnId = $deployment.Outputs['automationPrincipalId'].Value 
         #endregion
@@ -575,7 +591,7 @@ if ("Y", "y" -contains $continueInput) {
         $runbookDeploymentTemplateJson += $bottomTemplateJson
         $templateObject = ConvertFrom-Json $runbookDeploymentTemplateJson | ConvertTo-Hashtable
         Write-Host "Executing runbooks deployment..." -ForegroundColor Green
-        New-AzResourceGroupDeployment -TemplateObject $templateObject -ResourceGroupName $resourceGroupName -Name ($deploymentNameTemplate -f "runbooks") | Out-Null
+        New-AzResourceGroupDeployment -TemplateObject $templateObject -ResourceGroupName $resourceGroupName -Name ($deploymentNameTemplate -f "runbooks") -Tag $Tags | Out-Null
         Write-Host "Runbooks update deployed."
 
         Write-Host "Importing modules..." -ForegroundColor Green
@@ -601,7 +617,7 @@ if ("Y", "y" -contains $continueInput) {
         $modulesDeploymentTemplateJson += $bottomTemplateJson
         $templateObject = ConvertFrom-Json $modulesDeploymentTemplateJson | ConvertTo-Hashtable
         Write-Host "Executing modules deployment..." -ForegroundColor Green
-        New-AzResourceGroupDeployment -TemplateObject $templateObject -ResourceGroupName $resourceGroupName -Name ($deploymentNameTemplate -f "modules") | Out-Null
+        New-AzResourceGroupDeployment -TemplateObject $templateObject -ResourceGroupName $resourceGroupName -Name ($deploymentNameTemplate -f "modules") -Tag $Tags | Out-Null
         Write-Host "Modules update deployed."
 
         Write-Host "Updating schedules..." -ForegroundColor Green
