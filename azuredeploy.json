@@ -81,7 +81,7 @@
                 "description": "Base time for all automation runbook schedules."
             }
         },
-        "Tags" : {
+        "tags" : {
             "type": "array",
             "metadata": {
                 "description": "Tags to apply to resources"
@@ -99,7 +99,7 @@
             "apiVersion": "2021-04-01",
             "location": "[parameters('projectLocation')]",
             "dependsOn": [],
-            "tags": {}
+            "tags": {[parameters('tags')]}
         },
         {
             "name": "resourcesDeployment",
@@ -170,7 +170,7 @@
                         "value": "[parameters('contributorRoleAssignmentGuid')]"
                     },
                     "Tags": {
-                        "value": "[parameters('Tags')]"
+                        "value": "[parameters('tags')]"
                     }
                 },
                 "template": {
