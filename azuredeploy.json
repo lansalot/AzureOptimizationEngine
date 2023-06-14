@@ -168,7 +168,7 @@
                     "contributorRoleAssignmentGuid": {
                         "value": "[parameters('contributorRoleAssignmentGuid')]"
                     },
-                    "Tags": {
+                    "tags": {
                         "value": "[parameters('tags')]"
                     }
                 },
@@ -1985,7 +1985,7 @@
                                 "value": 30
                             },
                             {
-                                "name": "Tags",
+                                "name": "tags",
                                 "value":  "[parameters('tags')]"
 
                             }
