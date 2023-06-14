@@ -98,8 +98,7 @@
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "2021-04-01",
             "location": "[parameters('projectLocation')]",
-            "dependsOn": [],
-            "tags": {[parameters('tags')]}
+            "dependsOn": []
         },
         {
             "name": "resourcesDeployment",
@@ -1984,6 +1983,11 @@
                                 "name": "AzureOptimization_RecommendationStorageAcountGrowthLookbackDays",
                                 "description": "The lookback period (in days) for analyzing Storage Account growth",
                                 "value": 30
+                            },
+                            {
+                                "name": "Tags",
+                                "value":  "[parameters('tags')]"
+
                             }
                         ],
                         "roleContributor": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]"
@@ -2009,6 +2013,7 @@
                             "apiVersion": "[variables('apiVersions').storage]",
                             "name": "[parameters('storageAccountName')]",
                             "location": "[parameters('projectLocation')]",
+                            "tags" : "[parameters('tags')]",
                             "sku": {
                                 "name": "Standard_LRS",
                                 "tier": "Standard"
