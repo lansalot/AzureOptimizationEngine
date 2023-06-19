@@ -81,10 +81,10 @@
                 "description": "Base time for all automation runbook schedules."
             }
         },
-        "Tags" : {
+        "tags" : {
             "type": "object",
             "metadata": {
-                "description": "Tags to apply to resources"
+                "description": "tags to apply to resources"
             }
         }
     },
@@ -168,8 +168,8 @@
                     "contributorRoleAssignmentGuid": {
                         "value": "[parameters('contributorRoleAssignmentGuid')]"
                     },
-                    "Tags": {
-                        "value": "[parameters('Tags')]"
+                    "tags": {
+                        "value": "[parameters('tags')]"
                     }
                 },
                 "template": {
@@ -698,7 +698,12 @@
                             "metadata": {
                                 "description": "GUID for the Recommendations clean up job schedule creation - create a unique before deploy"
                             }
+                        },
+                        "tags": {
+                            "type": "object",
+                            "value": "[parameters('tags')]"
                         }
+
                     },
                     "variables": {
                         // CSV exports runbooks
@@ -2008,7 +2013,7 @@
                             "apiVersion": "[variables('apiVersions').storage]",
                             "name": "[parameters('storageAccountName')]",
                             "location": "[parameters('projectLocation')]",
-                            "tags" : "[parameters('Tags')]",
+                            "tags" : "[parameters('tags')]",
                             "sku": {
                                 "name": "Standard_LRS",
                                 "tier": "Standard"
