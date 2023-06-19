@@ -63,7 +63,7 @@ $deploymentOptions = @{}
 if (Test-Path -Path $lastDeploymentStatePath)
 {
     $depOptions = Get-Content -Path $lastDeploymentStatePath | ConvertFrom-Json
-    Write-Host $depOptions -ForegroundColor Green
+    $depOptions
     $depOptionsReuse = Read-Host "Found last deployment options above. Do you want to repeat/upgrade last deployment (Y/N)?"
     if ("Y", "y" -contains $depOptionsReuse)
     {
@@ -535,7 +535,7 @@ if ("Y", "y" -contains $continueInput) {
                 -logAnalyticsWorkspaceName $laWorkspaceName -logAnalyticsWorkspaceRG $laWorkspaceResourceGroup `
                 -storageAccountName $storageAccountName -automationAccountName $automationAccountName `
                 -sqlServerName $sqlServerName -sqlDatabaseName $sqlDatabaseName -cloudEnvironment $AzureEnvironment `
-                -sqlAdminLogin $sqlAdmin -sqlAdminPassword $sqlPass # -Tag $Tags
+                -sqlAdminLogin $sqlAdmin -sqlAdminPassword $sqlPass -Tags $Tags
         }
         else {
             $deployment = New-AzDeployment -TemplateUri $TemplateUri -Location $targetLocation -rgName $resourceGroupName -Name $deploymentName `
@@ -543,7 +543,7 @@ if ("Y", "y" -contains $continueInput) {
                 -logAnalyticsWorkspaceName $laWorkspaceName -logAnalyticsWorkspaceRG $laWorkspaceResourceGroup `
                 -storageAccountName $storageAccountName -automationAccountName $automationAccountName `
                 -sqlServerName $sqlServerName -sqlDatabaseName $sqlDatabaseName -cloudEnvironment $AzureEnvironment `
-                -sqlAdminLogin $sqlAdmin -sqlAdminPassword $sqlPass -artifactsLocationSasToken (ConvertTo-SecureString $ArtifactsSasToken -AsPlainText -Force) -Tag $Tags
+                -sqlAdminLogin $sqlAdmin -sqlAdminPassword $sqlPass -artifactsLocationSasToken (ConvertTo-SecureString $ArtifactsSasToken -AsPlainText -Force) -Tags $Tags
         }
         $spnId = $deployment.Outputs['automationPrincipalId'].Value 
         #endregion
