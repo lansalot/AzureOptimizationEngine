@@ -529,13 +529,13 @@ if ("Y", "y" -contains $continueInput) {
         Write-Host "Deploying Azure Optimization Engine resources..." -ForegroundColor Green
         if ([string]::IsNullOrEmpty($ArtifactsSasToken)) {
             $TemplateURI
-            $tags
+            #$tags
             $deployment = New-AzDeployment -TemplateUri $TemplateUri -Location $targetLocation -rgName $resourceGroupName -Name $deploymentName `
                 -projectLocation $targetlocation -logAnalyticsReuse $logAnalyticsReuse -baseTime $baseTime `
                 -logAnalyticsWorkspaceName $laWorkspaceName -logAnalyticsWorkspaceRG $laWorkspaceResourceGroup `
                 -storageAccountName $storageAccountName -automationAccountName $automationAccountName `
                 -sqlServerName $sqlServerName -sqlDatabaseName $sqlDatabaseName -cloudEnvironment $AzureEnvironment `
-                -sqlAdminLogin $sqlAdmin -sqlAdminPassword $sqlPass -Tags $Tags
+                -sqlAdminLogin $sqlAdmin -sqlAdminPassword $sqlPass -tags $Tags
         }
         else {
             $deployment = New-AzDeployment -TemplateUri $TemplateUri -Location $targetLocation -rgName $resourceGroupName -Name $deploymentName `
@@ -543,7 +543,7 @@ if ("Y", "y" -contains $continueInput) {
                 -logAnalyticsWorkspaceName $laWorkspaceName -logAnalyticsWorkspaceRG $laWorkspaceResourceGroup `
                 -storageAccountName $storageAccountName -automationAccountName $automationAccountName `
                 -sqlServerName $sqlServerName -sqlDatabaseName $sqlDatabaseName -cloudEnvironment $AzureEnvironment `
-                -sqlAdminLogin $sqlAdmin -sqlAdminPassword $sqlPass -artifactsLocationSasToken (ConvertTo-SecureString $ArtifactsSasToken -AsPlainText -Force) -Tags $Tags
+                -sqlAdminLogin $sqlAdmin -sqlAdminPassword $sqlPass -artifactsLocationSasToken (ConvertTo-SecureString $ArtifactsSasToken -AsPlainText -Force) -tags $Tags
         }
         $spnId = $deployment.Outputs['automationPrincipalId'].Value 
         #endregion
