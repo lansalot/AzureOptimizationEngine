@@ -81,7 +81,7 @@
                 "description": "Base time for all automation runbook schedules."
             }
         },
-        "tags" : {
+        "Tags" : {
             "type": "object",
             "metadata": {
                 "description": "Tags to apply to resources"
@@ -168,8 +168,8 @@
                     "contributorRoleAssignmentGuid": {
                         "value": "[parameters('contributorRoleAssignmentGuid')]"
                     },
-                    "tags": {
-                        "value": "[parameters('tags')]"
+                    "Tags": {
+                        "value": "[parameters('Tags')]"
                     }
                 },
                 "template": {
@@ -2008,7 +2008,7 @@
                             "apiVersion": "[variables('apiVersions').storage]",
                             "name": "[parameters('storageAccountName')]",
                             "location": "[parameters('projectLocation')]",
-                            "tags" : "[parameters('tags')]",
+                            "tags" : "[parameters('Tags')]",
                             "sku": {
                                 "name": "Standard_LRS",
                                 "tier": "Standard"
